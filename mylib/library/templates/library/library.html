@@ -1,0 +1,44 @@
+{% extends "mylib/base.html" %}
+{% block content %}
+ <main id="main">
+
+    <!-- ======= Our Portfolio Section ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Libraries</h2>
+          <ol>
+            <li><a href="{% url 'homepage' %}">Home</a></li>
+            <li>Libraries</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Our Portfolio Section -->
+
+    <!-- ======= Portfolio Section ======= -->
+    <section class="portfolio">
+      <div class="container">
+        <div class="row portfolio-container" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
+
+        {% for library in all_libraries %}
+          <div class="col-lg-4 col-md-6 portfolio-wrap filter-app">
+            <div class="portfolio-item", style="width:400px; height:250px">
+              <img src="{{ library.image.url }}" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h3>{{ library.name }}</h3>
+                <div>
+                  <a href="{% url 'library_detail' %}" title="Library Details"><i class="bx bx-link"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+            {% endfor %}
+        </div>
+
+      </div>
+    </section><!-- End Portfolio Section -->
+
+  </main><!-- End #main -->
+{% endblock %}
