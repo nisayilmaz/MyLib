@@ -17,13 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-
 from .views import HomepageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', HomepageView.as_view(), name='homepage'),
-    path('libraries/', include('library.urls'))
+    path('libraries/', include('library.urls')),
+    path('account/', include('members.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

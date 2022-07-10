@@ -1,0 +1,90 @@
+{% extends "mylib/base.html" %}
+{% block content %}
+<main id="main">
+    <div class="container register">
+                <div class="row">
+                    <div class="col-md-3 register-left">
+                        <h3>Welcome</h3>
+                        <p>You are 30 seconds away from earning your own money!</p>
+                        <input type="submit" name="" value="Login"/><br/>
+                    </div>
+                    <div class="col-md-9 register-right">
+                        <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#library_register" role="tab" aria-controls="library_register" aria-selected="true">Library</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#user_register" role="tab" aria-controls="user_register" aria-selected="false">User</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="library_register" role="tabpanel" aria-labelledby="library-tab">
+                                <h3 class="register-heading">Register Your Library</h3>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="row register-form">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                 {{ lib_form.username }}
+                                            </div>
+                                            <div class="form-group">
+                                                 {{ lib_form.library_address }}
+                                            </div>
+                                            <div class="form-group">
+                                                 {{ lib_form.password }}
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="password" class="form-control"  placeholder="Confirm Password *" value="" />
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                 {{ lib_form.email }}
+                                            </div>
+                                            <div class="form-group">
+                                                 {{ lib_form.phone }}
+                                            </div>
+                                            <button type="submit" name="submit" class="btnRegister"  value="library_reg">Register</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade show" id="user_register" role="tabpanel" aria-labelledby="user-tab">
+                                <h3  class="register-heading">Register as a User</h3>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="row register-form">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="First Name *" value="" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="Last Name *" value="" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="email" class="form-control" placeholder="Email *" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input type="text" maxlength="10" minlength="10" class="form-control" placeholder="Username *" value="" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="password" class="form-control" placeholder="Password *" value="" />
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="password" class="form-control" placeholder="Confirm Password *" value="" />
+                                            </div>
+                                            <input type="submit" class="btnRegister"  value="Register"/>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+{% endblock %}

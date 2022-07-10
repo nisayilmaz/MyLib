@@ -17,7 +17,9 @@ class Book(models.Model):
 class Library(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=200)
-    image = models.ImageField()
+    phone = models.CharField(max_length=13)
+
+    image = models.ImageField(default="//static/img/portfolio/portfolio-1.jpg")
 
     def __str__(self):
         return self.name

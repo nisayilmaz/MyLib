@@ -23,13 +23,13 @@
         <div class="row portfolio-container" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
 
         {% for library in all_libraries %}
-          <div class="col-lg-4 col-md-6 portfolio-wrap filter-app">
-            <div class="portfolio-item", style="width:400px; height:250px">
-              <img src="{{ library.image.url }}" class="img-fluid" alt="">
+          <div class="col-lg-4 col-md-6 portfolio-wrap filter-web">
+            <div class="portfolio-item" style="width:370px; height:230px">
+              <img src="{{library.image.url}}" class="img-fluid" alt="">
               <div class="portfolio-info">
-                <h3>{{ library.name }}</h3>
+                <h3>{{library.name}}</h3>
                 <div>
-                  <a href="{% url 'library_detail' %}" title="Library Details"><i class="bx bx-link"></i></a>
+                  <a href="{{library.name}}" title="Portfolio Details"><i class="bx bx-link"></i></a>
                 </div>
               </div>
             </div>

@@ -28,6 +28,11 @@
 
   <!-- Template Main CSS File -->
    <link href="{% static 'css/style.css'%}" rel="stylesheet">
+   <link href="{% static 'css/register.css'%}" rel="stylesheet">
+
+  <link href=" {% static 'css/bootstrap_min.css' %}" rel="stylesheet" id="bootstrap-css">
+  <script src="{% static 'js/jquery_min.js' %}"></script>
+  <script src="{% static 'js/bootstrap_min.js' %}"></script>
 
   <!-- =======================================================
   * Template Name: Moderna - v4.8.0
@@ -56,7 +61,7 @@
           <li><a href="{% url 'libraries_home' %}">Libraries</a></li>
           <li><a href="blog.html">Blog</a></li>
           <li><a href="contact.html">Login</a></li>
-          <li><a href="contact.html",>Join</a></li>
+          <li><a href="{% url 'register' %}">Join</a></li>
 
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
