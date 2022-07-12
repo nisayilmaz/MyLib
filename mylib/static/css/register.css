@@ -1,7 +1,8 @@
  .register{
-    background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+    background: -webkit-linear-gradient(top, #1e4356, #0b212d);;
     margin-top: 3%;
     padding: 3%;
+
 }
 .register-left{
     text-align: center;
@@ -92,4 +93,40 @@
     margin-top: 8%;
     margin-bottom: -15%;
     color: #495057;
+}
+.login {
+    border-radius: 1.5rem;
+    background-color: white;
+    color: white;
+    padding: 0.5em 1.5em;
+    text-decoration: none;
+    background: #0062cc;
+   color: #fff;
+   font-weight: 600;
+   width: 50%;
+   cursor: pointer;
+}
+
+.login:hover {
+  background-color: #555;
+  color: black;
+}
+
+.login:active {
+  background-color: black;
+}
+
+.login:visited {
+  background-color: #ccc;
+}
+
+.reg_lib {
+    color: white;
+    text-decoration: none;
+   font-weight: 600;
+   cursor: pointer;
+}
+
+.reg_lib:hover {
+  color: black;
 }

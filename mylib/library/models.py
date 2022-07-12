@@ -13,13 +13,13 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
-
 class Library(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=200)
-    phone = models.CharField(max_length=13)
+    phone = models.CharField(max_length=11)
+    image = models.ImageField()
+    email = models.EmailField()
 
-    image = models.ImageField(default="//static/img/portfolio/portfolio-1.jpg")
 
     def __str__(self):
         return self.name
