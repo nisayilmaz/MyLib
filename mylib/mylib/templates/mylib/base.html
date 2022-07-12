@@ -55,13 +55,21 @@
       </div>
 
       <nav id="navbar" class="navbar">
+
         <ul>
+          {% if user.is_authenticated %}
+          <li style="color:white;">Welcome {{request.user.username }}!</li>
+          {% endif %}
           <li><a href="{% url 'homepage' %}">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="{% url 'libraries_home' %}">Libraries</a></li>
           <li><a href="blog.html">Blog</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'libraries_home' %}">Libraries</a></li>
+          <li><a href="{% url 'logout' %}">Logout</a></li>
+          {% else %}
+          <li><a href="about.html">About</a></li>
           <li><a href="{% url 'login' %}">Login</a></li>
           <li><a href="{% url 'register' %}">Join</a></li>
+          {% endif %}
 
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>

@@ -2,16 +2,19 @@ from django import forms
 from .models import User
 from library.models import Library
 
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=150, required=True)
+    password = forms.CharField(widget=forms.PasswordInput)
 
 class CreateUserForm(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput)
-    library = forms.ModelChoiceField(queryset=Library.objects.all().order_by('name'), empty_label='Chose your library')
+    library = forms.ModelChoiceField(queryset=Library.objects.all().order_by('name'), empty_label='Chose your library', required=False)
 
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'username', 'email', 'password', 'library')
         widgets = {
-            'password': forms.PasswordInput(),
+            'password': forms.PasswordInput()
         }
 
     def clean(self):
@@ -34,7 +37,7 @@ class CreateUserForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CreateUserForm, self).__init__(*args, **kwargs)
-
+        self.fields['email'].required = True
         placeholders = {
             'first_name': 'First Name*',
             'last_name': 'Last Name*',
