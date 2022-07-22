@@ -1,0 +1,191 @@
+{% extends "mylib/base.html" %}
+{% block title %}
+<title>Mylib•{{book.title}}</title>
+{% endblock %}
+{% block content %}
+<!-- ======= Our Portfolio Section ======= -->
+<main id="main">
+    <section class="breadcrumbs">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>{{ book.title }}</h2>
+                <ol>
+                    <li><a href="{%url 'homepage'%}">Home</a></li>
+                    <li><a href="{%url 'libraries_home'%}">Libraries</a></li>
+                    <li><a href="{%url 'library_detail' library.pk %}">{{library.name}}</a></li>
+                    <li>{{book.title}}</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+    <!-- End Our Portfolio Section -->
+    <!-- ======= Portfolio Details Section ======= -->
+    {% for message in messages %}
+    <div class="container-fluid p-0">
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="True">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+    </div>
+    {% endfor %}
+    <section id="portfolio-details" class="portfolio-details">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-8">
+                    <div class="portfolio-details-slider swiper">
+                        <div class="swiper-wrapper align-items-center">
+                            <div class="swiper-slide">
+                                <img style=" display: block; margin-left: auto; margin-right: auto; width:50%;"
+                                     src="{{book.image.url}}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="portfolio-info">
+                        <h3>Information</h3>
+                        <ul>
+                            <li><strong>Title</strong>: {{book.title}}</li>
+                            <li><strong>Author</strong>: {{book.author}}</li>
+                            <li><strong>Genre</strong>: {{book.genre}}</li>
+                            <li><strong>ISBN</strong>: {{book.isbn}}</li>
+                        </ul>
+                        {% if book.info != "" %}
+                        <div class="portfolio-description">
+                            <h3>Book Info</h3>
+                            <p>
+                                {{book.info}}
+                            </p>
+                        </div>
+                        {% endif %}
+                        <div class="book-detail">
+                            {% if book.available == True %}
+                            <button type="button" class="book-detail-btn" data-toggle="modal"
+                                    data-target="#borrowBookModal">
+                                Borrow Book
+                            </button>
+                            {% elif book.available == False and borrowed_book.borrowed_by != request.user %}
+                                <p class="book-detail-p" > This book is borrowed by someone else until {{borrowed_book.latest_return_date}}</p>
+                            {% endif %}
+                            {% if borrowed_book.borrowed_by == request.user %}
+                            <button type="button" class="book-detail-btn" data-toggle="modal"
+                                    data-target="#returnBookModal">
+                                Return Book
+                            </button>
+                            {% endif %}
+                            {% if request.user.library == book.location %}
+                            <button type="button" class="book-detail-btn" data-toggle="modal"
+                                    data-target="#deleteModal">
+                                Delete Book
+                            </button>
+                            <button type="button" class="book-detail-btn" data-toggle="modal"
+                                    data-target="#editBookModal">
+                                Edit Book
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Are you sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>{{book.title }} will be deleted. Do you confirm that?</p>
+                    <form method="POST" action="{% url 'delete_book' book.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" name="confirm" class="btn btn-primary">Delete</button>
+                        <button type="submit" name="discard" class="btn btn-secondary" data-dismiss="modal">Close
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editBookModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editBookLabel">Edit Book</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype='multipart/form-data' action="{% url 'edit_book' book.pk %}">
+                        {% csrf_token %}
+                        {{ edit_form }}
+                        <div class="modal-footer">
+                            <button type="submit" name="confirm" class="btn btn-primary">Confirm Changes
+                            </button>
+                            <button type="submit" name="discard" class="btn btn-secondary"
+                                    data-dismiss="modal">Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="borrowBookModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="borrowBookTitle">Borrow Book</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'borrow_book' book.pk %}">
+                        <p>Do you confirm borrowing this book?</p>
+                        {% csrf_token %}
+                        <button type="submit" name="confirm_borrow" class="btn btn-primary">Borrow</button>
+                        <button type="submit" name="discard" class="btn btn-secondary" data-dismiss="modal">Cancel
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="returnBookModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="returnBookTitle">Return Book</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'return_book' book.pk %}">
+                        <p>Do you confirm returning this book?</p>
+                        {% csrf_token %}
+                        <button type="submit" name="confirm_return" class="btn btn-primary">Return</button>
+                        <button type="submit" name="discard" class="btn btn-secondary" data-dismiss="modal">Cancel
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- End #main -->
+{% endblock %}

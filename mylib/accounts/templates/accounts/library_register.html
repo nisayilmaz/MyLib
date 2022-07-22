@@ -1,55 +1,54 @@
 {% extends "mylib/base.html" %}
+{% block title %}
+<title>Mylib•Library Register</title>
+{% endblock %}
 {% block content %}
+{% load crispy_forms_tags %}
 <main id="main" style="background: -webkit-linear-gradient(top, #1e4356, #0b212d); ">
-    <div class="container register" style="margin-right: 250px; ">
-                <div class="row">
-                    <div class="col-md-3 register-left">
-                        <br>
-                        <h3>Welcome</h3>
-                        <p>Register your library here to reach out to the bookworms of MyLib!</p>
-                        <a href="{% url 'login' %}" class="login">Login</a><br/>
-                    </div>
-                    <div class="col-md-9 register-right">
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="library_register" role="tabpanel" aria-labelledby="library-tab">
-                                <h3 class="register-heading">Register your Library</h3>
-                                <br>
-                                <form method="POST" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    <div class="row register-form">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                 {{ library_form.name }}
-                                                {{library_form.name.errors}}
-                                            </div>
-                                            <div class="form-group">
-                                                 {{ library_form.address }}
-                                                {{library_form.address.errors}}
-                                            </div>
-                                            <div class="form-group">
-                                                 {{ library_form.phone }}
-                                                {{library_form.phone.errors}}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                 {{ library_form.email }}
-                                            </div>
-                                            <div class="form-group">
-                                                {{library_form.image}}
-                                            </div>
-                                             <br>
-                                            <button type="submit" name="submit" class="btnRegister"  value="library_reg">Register</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <br>
-                            </div>
+   <div class="container register" style="margin-right: 250px; ">
+      <div class="row">
+         <div class="col-md-3 register-left">
+            <br>
+            <h3>Welcome</h3>
+            <p>Register your library here to reach out to the bookworms of MyLib!</p>
+            <a href="{% url 'login' %}" class="login">Login</a><br/>
+         </div>
+         <div class="col-md-9 register-right">
+            <div class="tab-content" id="myTabContent">
+               <div class="tab-pane fade show active" id="library_register" role="tabpanel" aria-labelledby="library-tab">
+                  <h3 class="register-heading">Register your Library</h3>
+                  <br>
+                  <form method="POST" enctype="multipart/form-data">
+                     {% csrf_token %}
+                     <div class="row register-form">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              {{ library_form.name|as_crispy_field }}
+                           </div>
+                           <div class="form-group">
+                              {{ library_form.address|as_crispy_field }}
+                           </div>
+                           <div class="form-group">
+                              {{ library_form.phone|as_crispy_field }}
+                           </div>
                         </div>
-                    </div>
-                </div>
-
+                        <div class="col-md-6">
+                           <div class="form-group">
+                              {{ library_form.email|as_crispy_field }}
+                           </div>
+                           <div class="form-group">
+                              {{library_form.image|as_crispy_field}}
+                           </div>
+                           <br>
+                           <button type="submit" name="submit" class="btnRegister"  value="library_reg">Register</button>
+                        </div>
+                     </div>
+                  </form>
+                  <br>
+               </div>
             </div>
+         </div>
+      </div>
+   </div>
 </main>
-
 {% endblock %}

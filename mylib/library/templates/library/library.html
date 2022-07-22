@@ -1,44 +1,43 @@
 {% extends "mylib/base.html" %}
+{% block title %}
+<title>Mylib•Libraries</title>
+{% endblock %}
 {% block content %}
- <main id="main">
-
-    <!-- ======= Our Portfolio Section ======= -->
-    <section class="breadcrumbs">
+<main id="main">
+   <!-- ======= Our Portfolio Section ======= -->
+   <section class="breadcrumbs">
       <div class="container">
-
-        <div class="d-flex justify-content-between align-items-center">
-          <h2>Libraries</h2>
-          <ol>
-            <li><a href="{% url 'homepage' %}">Home</a></li>
-            <li>Libraries</li>
-          </ol>
-        </div>
-
+         <div class="d-flex justify-content-between align-items-center">
+            <h2>Libraries</h2>
+            <ol>
+               <li><a href="{% url 'homepage' %}">Home</a></li>
+               <li>Libraries</li>
+            </ol>
+         </div>
       </div>
-    </section><!-- End Our Portfolio Section -->
-
-    <!-- ======= Portfolio Section ======= -->
-    <section class="portfolio">
+   </section>
+   <!-- End Our Portfolio Section -->
+   <!-- ======= Portfolio Section ======= -->
+   <section class="portfolio">
       <div class="container">
-        <div class="row portfolio-container" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
-
-        {% for library in all_libraries %}
-          <div class="col-lg-4 col-md-6 portfolio-wrap filter-web">
-            <div class="portfolio-item" style="width:370px; height:230px">
-              <img src="{{library.image.url}}" class="img-fluid" alt="">
-              <div class="portfolio-info">
-                <h3>{{library.name}}</h3>
-                <div>
-                  <a href="{{library.name}}" title="Portfolio Details"><i class="bx bx-link"></i></a>
-                </div>
-              </div>
+         <div class="row portfolio-container" data-aos="fade-up" data-aos-easing="ease-in-out" data-aos-duration="500">
+            {% for library in all_libraries %}
+            <div class="col-lg-6 col-md-6 portfolio-wrap filter-web">
+               <div class="portfolio-item">
+                  <img src="{{library.image.url}}" class="img-fluid" alt="" style=" height:400px;">
+                  <div class="portfolio-info">
+                     <h3>{{library.name}}</h3>
+                     <div>
+                        <a href= "{% url 'library_detail' library.pk %} " title="Library Details"><i class="bx bx-link"></i></a>
+                     </div>
+                  </div>
+               </div>
             </div>
-          </div>
             {% endfor %}
-        </div>
-
+         </div>
       </div>
-    </section><!-- End Portfolio Section -->
-
-  </main><!-- End #main -->
+   </section>
+   <!-- End Portfolio Section -->
+</main>
+<!-- End #main -->
 {% endblock %}

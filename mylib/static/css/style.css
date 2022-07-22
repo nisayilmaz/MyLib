@@ -95,6 +95,8 @@ h1, h2, h3, h4, h5, h6, .font-primary {
 
 #main {
   margin-top: 80px;
+  position: relative;
+  min-height: 85vh;
 }
 
 /*--------------------------------------------------------------
@@ -1844,6 +1846,10 @@ section {
   padding: 0 0 30px 0;
   color: #fff;
   font-size: 14px;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;
+
 }
 #footer .footer-newsletter {
   padding: 50px 0;
@@ -1986,4 +1992,239 @@ section {
 }
 #footer .credits a {
   color: #a2cce3;
+}
+
+.product-grid{
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+.product-grid .product-image{
+    overflow: hidden;
+    position: relative;
+}
+.product-grid .product-image a.image{ display: block; }
+.product-grid .product-image img{
+    width: 100%;
+    height: auto;
+    transition: all 0.5s ease 0s;
+}
+.product-grid:hover .product-image img{ transform: scale(1.1); }
+.product-grid .product-links{
+    background: #fff;
+    width: 150px;
+    padding: 10px 20px;
+    margin: 0;
+    list-style: none;
+    border-radius: 30px;
+    box-shadow: 1px 0 30px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateX(-50%) translateY(-150%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: all .35s ease;
+}
+.product-grid:hover .product-links{
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%);
+}
+.product-grid .product-links li{
+    width: 48%;
+    margin: 10px 0;
+    display: inline-block;
+}
+.product-grid .product-links li a{
+    color: #788090;
+    font-size: 18px;
+    transition: all .3s;
+}
+.product-grid .product-links li a:hover{
+    color: #341f97;
+    text-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+}
+.product-grid .product-content{ padding: 15px; }
+.product-grid .price{
+    color: #333;
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 10px;
+}
+.product-grid .price span{
+    color: #999;
+    font-weight: 400;
+    margin: 0 0 0 5px;
+    text-decoration: line-through;
+}
+.product-grid .title{
+    font-size: 20px;
+    font-weight: 500;
+    text-transform: capitalize;
+    margin: 0 0 12px;
+}
+.product-grid .title a{
+    color: #333;
+    transition: all 0.3s ease 0s;
+}
+.product-grid .title a:hover{
+    color: #341f97;
+    text-decoration: underline;
+}
+.product-grid .rating{
+    color: #fbb230;
+    font-size: 13px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.product-grid .rating li.far{ color: #999; }
+@media screen and (max-width: 990px){
+    .product-grid{ margin-bottom: 30px; }
+}
+
+.asteriskField {
+    display: none;
+}
+
+
+.search-form{
+    position: relative;
+    transform: translateX(50%);
+    transform: translateY(-50%)
+    top: 50%;
+    transition: all 1s;
+    width: 50px;
+    height: 50px;
+    background: white;
+    box-sizing: border-box;
+    border-radius: 50px;
+    border: 4px solid white;
+    padding: 5px;
+}
+
+.search-input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;;
+    height: 42.5px;
+    line-height: 30px;
+    outline: 0;
+    border: 0;
+    display: none;
+    font-size: 1em;
+    border-radius: 20px;
+    padding: 0 20px;
+}
+
+.fa{
+    box-sizing: border-box;
+    padding: 10px;
+    width: 42.5px;
+    height: 42.5px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 50%;
+    color: #07051a;
+    text-align: center;
+    font-size: 1.2em;
+    transition: all 1s;
+}
+
+.search-form:hover,
+.search-form:valid{
+    width: 200px;
+    cursor: pointer;
+}
+
+.search-form:hover input,
+.search-form:valid input{
+    display: block;
+}
+
+.search-form:hover .fa,
+.search-form:valid .fa{
+    background: #07051a;
+    color: white;
+}
+
+
+.form-a {
+  display: none;
+  position: absolute;
+  top: 70px;
+  bottom:0;
+  left: 0;
+  right: 0;
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  width: 100%;
+}
+
+.search-form:valid a {
+  display: block;
+}
+
+.book-detail-btn {
+ width: 100%;
+  background-color: #e9ecef;
+  border: 0;
+  border-radius: .5rem;
+  box-sizing: border-box;
+  color: #111827;
+  font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  padding: .75rem 1rem;
+  text-align: center;
+  text-decoration: none #D1D5DB solid;
+  text-decoration-thickness: auto;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 86%), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin:10px
+}
+
+.book-detail-btn:hover {
+  background-color: rgb(249,250,251);
+}
+
+.book-detail-btn:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.book-detail-btn:focus-visible {
+  box-shadow: none;
+}
+
+book-detail {
+  display: flex;
+  justify-content: space-around;
+}
+
+.book-detail-p {
+ width: 100%;
+  background-color: #e9ecef;
+  border: 0;
+  border-radius: .5rem;
+  box-sizing: border-box;
+  color: #111827;
+  font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: .875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  padding: .75rem 1rem;
+  text-align: center;
+  text-decoration: none #D1D5DB solid;
+  text-decoration-thickness: auto;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 86%), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin:10px
 }

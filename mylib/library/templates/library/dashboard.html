@@ -1,0 +1,124 @@
+{% extends "mylib/base.html" %}
+{% block title %}
+<title>Mylib•Dashboard</title>
+{% endblock %}
+{% block content %}
+<main id="main">
+    <section class="breadcrumbs">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>{{ book.title }}</h2>
+                <ol>
+                    <li><a href="{%url 'homepage'%}">Home</a></li>
+                    <li><a href="{%url 'libraries_home'%}">Libraries</a></li>
+                    <li><a href="{%url 'library_detail' library.id%}">{{library.name}}</a></li>
+                    <li><a>Dashboard</a></li>
+                </ol>
+            </div>
+        </div>
+    </section>
+    <section id="portfolio-details" class="portfolio-details">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-8">
+                    <div class="portfolio-details-slider swiper">
+                        <div class="swiper-wrapper align-items-center">
+                            <div class="swiper-slide">
+                                <img style="width:600px" src="{{library.image.url}}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="portfolio-info">
+                        <h3>Information</h3>
+                        <ul>
+                            <li><strong>Name</strong>: {{library.name}}</li>
+                            <li><strong>Address</strong>: {{library.address}}</li>
+                            <li><strong>Phone</strong>: {{library.phone}}</li>
+                            <li><strong>Email</strong>: {{library.email}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="facts section-bg" data-aos="fade-up">
+        <div class="container">
+
+            <div class="row counters">
+
+                <div class="col-lg-6 col-6 text-center">
+                    <span data-purecounter-start="0" data-purecounter-end="{{books|length}}"
+                          data-purecounter-duration="1"
+                          class="purecounter"></span>
+                    <p>Books</p>
+                </div>
+
+                <div class="col-lg-6 col-6 text-center">
+                    <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1"
+                          class="purecounter"></span>
+                    <p>Projects</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+    <section class="skills">
+        <div class="section-title">
+            <h2>Books</h2>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBookModal">
+                Add Book
+            </button>
+        </div>
+
+        <div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add a book</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" enctype='multipart/form-data' action="{% url 'add_book' %}">
+                            {% csrf_token %}
+                            {{ form }}
+                            <div class="modal-footer">
+                                <button type="submit" name="confirm" class="btn btn-primary">Add</button>
+                                <button type="submit" name="discard" class="btn btn-secondary" data-dismiss="modal">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                {% for book in books %}
+                <div class="col-md-2 col-sm-6">
+                    <div class="product-grid">
+                        <div class="product-image">
+                            <a href="#" class="image">
+                                <img style="height:200px " class="img-1" src="{{book.image.url}}">
+                            </a>
+                            <ul class="product-links">
+                                <li><a href="{% url 'book_detail' book.pk %}">More</a></li>
+                            </ul>
+                        </div>
+                        <div class="product-content">
+                            <h3 class="title"><a href="#">{{ book.title }}</a></h3>
+                            <p>{{ book.author }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

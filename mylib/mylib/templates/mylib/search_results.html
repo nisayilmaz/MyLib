@@ -1,0 +1,44 @@
+{% extends "mylib/base.html" %}
+{% block title %}
+<title>Mylib•Libraries</title>
+{% endblock %}
+{% block content %}
+<main id="main">
+        {% for message in messages %}
+    <div class="container-fluid p-0">
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="True">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+    </div>
+    {% endfor %}
+       <div class="section-title">
+        <h2>Search results for "{{ searched }}"</h2>
+    </div>
+       <div class="container">
+        <div class="row">
+            {% for book in found %}
+            <div class="col-md-2 col-sm-6">
+                <div class="product-grid">
+                    <div class="product-image">
+                        <a href="#" class="image">
+                            <img style="height:200px" class="img-1" src="{{book.image.url}}">
+                        </a>
+                        <ul class="product-links">
+                            <li><a href="{% url 'book_detail' book.pk %}">More</a></li>
+                        </ul>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="title"><a href="#">{{ book.title }}</a></h3>
+                        <p>{{ book.author }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+<!-- End #main -->
+{% endblock %}

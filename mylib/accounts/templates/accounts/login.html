@@ -1,12 +1,98 @@
 {% extends "mylib/base.html" %}
+{% block title %}
+<title>Mylib•Login</title>
+{% endblock %}
 {% block content %}
-<main id="main">
-    <h1>LOGIN</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{login_form }}
-        <button type="submit">Submit</button>
-    </form>
+{% load crispy_forms_tags %}
+
+<main id="main" style="background: -webkit-linear-gradient(top, #1e4356, #0b212d); ">
+    {% for message in messages %}
+    <div class="container-fluid p-0">
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="True">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+    </div>
+    {% endfor %}
+    <div class="container register" style="margin-right: 250px; ">
+        <div class="row">
+            <div class="col-md-3 register-left">
+                <br>
+                <h3>Welcome</h3>
+                <p>You don't have an account?</p>
+                <a href="{% url 'register' %}" class="login">Register</a><br/>
+            </div>
+            <div class="col-md-9 register-right">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="library_register" role="tabpanel"
+                         aria-labelledby="library-tab">
+                        <h3 class="register-heading">Login</h3>
+                        <br>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="row register-form">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ login_form.username|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ login_form.password|as_crispy_field }}
+                                    </div>
+                                    <a data-toggle="modal"
+                                       href="#resetEmailSendModal">
+                                        Forgot your password?
+                                    </a>
+
+                                    <button type="submit" name="login" class="btnRegister" value="login">
+                                        Login
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="resetEmailSendModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Reset Password</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype='multipart/form-data'
+                          action="{% url 'password_reset_submit' %}">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="modal-footer">
+                            <button type="submit" name="confirm"
+                                    class="btn btn-primary">
+                                Send Email
+                            </button>
+                            <button type="submit" name="discard"
+                                    class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 {% endblock %}
