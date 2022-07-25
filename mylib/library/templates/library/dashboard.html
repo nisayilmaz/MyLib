@@ -45,9 +45,7 @@
     </section>
     <section class="facts section-bg" data-aos="fade-up">
         <div class="container">
-
             <div class="row counters">
-
                 <div class="col-lg-6 col-6 text-center">
                     <span data-purecounter-start="0" data-purecounter-end="{{books|length}}"
                           data-purecounter-duration="1"
@@ -56,14 +54,40 @@
                 </div>
 
                 <div class="col-lg-6 col-6 text-center">
-                    <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1"
+                    <span data-purecounter-start="0" data-purecounter-end="{{lent|length}}" data-purecounter-duration="1"
                           class="purecounter"></span>
-                    <p>Projects</p>
+                    <p>Lent Books</p>
                 </div>
             </div>
-
         </div>
     </section>
+    <div class="container" style="padding:5%">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Book</th>
+                <th scope="col">Borrowed By</th>
+                <th scope="col">Lastest Return Date</th>
+                <th scope="col">Returned On</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for b in borrowed_books %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{b.book.title}}</td>
+                <td>{{b.borrowed_by.username}}</td>
+                <td>{{b.latest_return_date}}</td>
+                {% if b.returned == None %}
+                <td>Not returned yet</td>
+                {% else %}
+                <td>{{b.returned}}</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
     <section class="skills">
         <div class="section-title">
             <h2>Books</h2>

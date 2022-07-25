@@ -18,7 +18,7 @@ class LibraryDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         library = Library.objects.get(pk=pk)
         books = Book.objects.filter(location=pk)
-        return render(request, 'library/library_detail.html', {'library': library, 'books': books})
+        return render(request, 'library/library_detail.html', {'library': library, 'books': books, })
 
 
 class BookDetailView(LoginRequiredMixin, View):
@@ -38,9 +38,12 @@ class LibrarianDashboardView(LibrarianPermissionRequiredMixin, View):
     def get(self, request):
         pk = request.user.library.id
         library = Library.objects.get(pk=pk)
+        borrowed_books = Borrowed.objects.filter(book__location=library)
+        not_returned = borrowed_books.filter(returned=None)
         books = Book.objects.filter(location=pk)
         form = BookForm()
-        return render(request, 'library/dashboard.html', {'library': library, 'books': books, 'form': form})
+        return render(request, 'library/dashboard.html',
+                      {'library': library, 'books': books, 'form': form, 'borrowed_books': borrowed_books, 'lent': not_returned})
 
 
 class AddBookView(LibrarianPermissionRequiredMixin, View):
@@ -92,7 +95,7 @@ class BorrowBookView(View):
         book_count = Borrowed.objects.filter(borrowed_by=user, returned__isnull=True).count()
 
         if 'confirm_borrow' in request.POST:
-            if book_count <= 3 and book.available:
+            if book_count < 3 and book.available:
                 borrowed_book.save()
                 messages.success(request, 'Book borrowed')
                 book.available = False
