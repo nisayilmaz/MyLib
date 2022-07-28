@@ -4,7 +4,7 @@
 {% endblock %}
 {% block content %}
 <main id="main">
-        {% for message in messages %}
+    {% for message in messages %}
     <div class="container-fluid p-0">
         <div class="alert {{ message.tags }} alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -14,10 +14,10 @@
         </div>
     </div>
     {% endfor %}
-       <div class="section-title">
+    <div class="section-title">
         <h2>Search results for "{{ searched }}"</h2>
     </div>
-       <div class="container">
+    <div class="container">
         <div class="row">
             {% for book in found %}
             <div class="col-md-2 col-sm-6">
@@ -33,6 +33,37 @@
                     <div class="product-content">
                         <h3 class="title"><a href="#">{{ book.title }}</a></h3>
                         <p>{{ book.author }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section-title">
+        <h2>Search results for "{{ searched }}" in Google</h2>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for i in books %}
+            <div class="col-md-2 col-sm-6">
+                <div class="product-grid">
+                    <div class="product-image">
+                        <a href="#" class="image">
+                            <img style="height:200px" class="img-1" src="{{ i.volumeInfo.imageLinks.thumbnail }}">
+                        </a>
+                        {%if user.groups.all.0.name == "Librarian" %}
+                        <ul class="product-links">
+                            <form method="POST" action="{% url 'add' forloop.counter %}">
+                                {% csrf_token %}
+                                <input type="submit" value="Add Book" >
+                            </form>
+                        </ul>
+                        {% endif %}
+                    </div>
+                    <div class="product-content">
+                        <h3 class="title"><a href="#">{{i.volumeInfo.title}}</a></h3>
+                        <p>{% for a in i.volumeInfo.authors %} {{a}}{% endfor %}</p>
                     </div>
                 </div>
             </div>

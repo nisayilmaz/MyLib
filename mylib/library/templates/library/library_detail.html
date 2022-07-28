@@ -25,10 +25,24 @@
                 <div class="col-lg-8">
                     <div class="portfolio-details-slider swiper">
                         <div class="swiper-wrapper align-items-center">
+
                             <div class="swiper-slide">
-                                <img style="width:600px" src="{{library.image.url}}" alt="">
+                                <img src="{{library.image.url}}" alt="">
+                            </div>
+
+                            <div class="swiper-slide">
+                                <iframe
+                                        width="100%"
+                                        height="450"
+                                        style="border:0"
+                                        loading="lazy"
+                                        allowfullscreen
+                                        referrerpolicy="no-referrer-when-downgrade"
+                                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCnG1rNJlQTHE0uZr4MLOCPqhJl5F9dX40&q={{library.address}}">
+                                </iframe>
                             </div>
                         </div>
+                        <div class="swiper-pagination"></div>
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -52,12 +66,12 @@
 
     <div class="container">
         <div class="row">
-            {% for book in books %}
+            {% for book in books|dictsort:"title" %}
             <div class="col-md-2 col-sm-6">
                 <div class="product-grid">
                     <div class="product-image">
                         <a href="#" class="image">
-                            <img style="height:200px" class="img-1" src="{{book.image.url}}">
+                            <img style="height:200px " class="img-1" src="{{book.image.url}}">
                         </a>
                         <ul class="product-links">
                             <li><a href="{% url 'book_detail' book.pk %}">More</a></li>

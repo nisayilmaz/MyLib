@@ -5,7 +5,7 @@ from .models import Book
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ('title', 'genre', 'author', 'isbn', 'info', 'image')
+        fields = ('title', 'author', 'isbn', 'info', 'image')
 
     def clean(self):
         super(BookForm, self).clean()

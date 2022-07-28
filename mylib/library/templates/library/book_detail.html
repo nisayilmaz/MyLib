@@ -38,7 +38,7 @@
                         <div class="swiper-wrapper align-items-center">
                             <div class="swiper-slide">
                                 <img style=" display: block; margin-left: auto; margin-right: auto; width:50%;"
-                                     src="{{book.image.url}}" alt="">
+                                     src="{{book.image.url}}">
                             </div>
                         </div>
                     </div>
@@ -49,12 +49,11 @@
                         <ul>
                             <li><strong>Title</strong>: {{book.title}}</li>
                             <li><strong>Author</strong>: {{book.author}}</li>
-                            <li><strong>Genre</strong>: {{book.genre}}</li>
                             <li><strong>ISBN</strong>: {{book.isbn}}</li>
                         </ul>
-                        {% if book.info != "" %}
+                        {% if book.info != none %}
                         <div class="portfolio-description">
-                            <h3>Book Info</h3>
+                            <h3>Book Description</h3>
                             <p>
                                 {{book.info}}
                             </p>
@@ -67,7 +66,8 @@
                                 Borrow Book
                             </button>
                             {% elif book.available == False and borrowed_book.borrowed_by != request.user %}
-                                <p class="book-detail-p" > This book is borrowed by someone else until {{borrowed_book.latest_return_date}}</p>
+                            <p class="book-detail-p"> This book is borrowed by someone else until
+                                {{borrowed_book.latest_return_date}}</p>
                             {% endif %}
                             {% if borrowed_book.borrowed_by == request.user %}
                             <button type="button" class="book-detail-btn" data-toggle="modal"

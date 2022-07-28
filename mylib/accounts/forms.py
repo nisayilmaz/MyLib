@@ -66,7 +66,6 @@ class CreateLibraryForm(forms.ModelForm):
         form_phone = self.cleaned_data.get('phone')
         form_name = self.cleaned_data.get('name')
         form_address = self.cleaned_data.get('address')
-        form_email = self.cleaned_data.get('email')
 
         if len(str(form_phone).strip()) != 11 or not (str(form_phone).strip()).isdigit():
             self._errors['phone'] = self.error_class(['Please enter a valid phone number'])

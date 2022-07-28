@@ -2089,7 +2089,6 @@ section {
 .search-form{
     position: relative;
     transform: translateX(50%);
-    transform: translateY(-50%)
     top: 50%;
     transition: all 1s;
     width: 50px;
@@ -2227,4 +2226,9 @@ book-detail {
   -webkit-user-select: none;
   touch-action: manipulation;
   margin:10px
+}
+.my-custom-scrollbar {
+position: relative;
+height: 400px;
+overflow: auto;
 }
