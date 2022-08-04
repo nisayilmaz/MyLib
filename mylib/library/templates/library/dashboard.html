@@ -69,13 +69,14 @@
                 <h2>Most Frequently Borrowed</h2>
 
             </div>
-            <div class="skills-content">
-                {% for b in frequent %}
+            <div class="skills-content text-right">
+                {% for obj in frequent %}
+                {{obj.book__title}}
                 <div class="progress">
-                    <div style="background-color:pink; " class="progress-bar progress-bar-striped progress-bar-animated"
-                         role="progressbar" aria-valuenow="{{b.1}}" aria-valuemin="0"
-                         aria-valuemax="{{frequent.0.1}}">
-                        <span class="skill">HTML <i class="val">100%</i></span>
+                    <div style="background-color:pink;" class="progress-bar progress-bar-striped progress-bar-animated"
+                         role="progressbar" aria-valuenow="{{obj.percentage}}" aria-valuemin="0"
+                         aria-valuemax="100">
+                        <span class="skill">{{ obj.count_borrow }} Times</span>
                     </div>
                 </div>
                 {% endfor %}
@@ -83,7 +84,7 @@
 
         </div>
     </section>
-    <div class="container" style="padding:5%">
+    <div class="container" style="padding:20px" data-aos="fade-up">
         <div class="table-wrapper-scroll-y my-custom-scrollbar">
             <table class="table table-bordered mb-0">
                 <thead>
@@ -145,7 +146,7 @@
                 </div>
             </div>
         </div>
-        <div class="container">
+        <div class="container" data-aos="fade-up">
             <div id="books" class="row">
                 {% include 'library/book_display.html' %}
             </div>
@@ -185,6 +186,5 @@
         }); //
 
     });
-
 </script>
 {% endblock %}

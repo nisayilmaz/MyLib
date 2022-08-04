@@ -21,7 +21,7 @@ class CreateUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'password', 'library')
+        fields = ('first_name', 'last_name', 'username', 'email', 'password', 'library', 'avatar')
         widgets = {
             'password': forms.PasswordInput()
         }
@@ -45,7 +45,7 @@ class CreateUserForm(forms.ModelForm):
         if len(str(form_first_name).strip()) < 1:
             self.add_error('first_name', 'Please enter your first name')
         if len(str(form_last_name).strip()) < 1:
-            self.add_error('last_name','Please enter your last name')
+            self.add_error('last_name', 'Please enter your last name')
         if len(str(form_email).strip()) < 1:
             self.add_error('email', 'Please enter your email')
         return self.cleaned_data
@@ -55,6 +55,16 @@ class CreateUserForm(forms.ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
+class EditProfileForm(forms.ModelForm):
+    bio = forms.CharField(max_length=500)
+    class Meta:
+        model = User
+        fields = {'username', 'avatar'}
+
+
+    def __init__(self, *args, **kwargs):
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+        self.fields['bio'].required = False
 
 class CreateLibraryForm(forms.ModelForm):
     class Meta:

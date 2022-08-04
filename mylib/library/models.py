@@ -5,6 +5,7 @@ from tempfile import NamedTemporaryFile
 import os
 from django.template.defaultfilters import slugify
 
+
 # Create your models here.
 class Book(models.Model):
     title = models.CharField(max_length=400)
@@ -14,8 +15,7 @@ class Book(models.Model):
     image = models.ImageField()
     info = models.TextField(null=True, blank=True)
     available = models.BooleanField(default=True)
-    image_src = models.CharField(max_length=300,null=True, blank=True)
-
+    image_src = models.CharField(max_length=300, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         string = self.title

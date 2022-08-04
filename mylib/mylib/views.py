@@ -3,6 +3,7 @@ from django.contrib.postgres.search import SearchVector
 from django.shortcuts import render, redirect
 from django.views import View
 from library.models import Book
+from accounts.models import Profile
 import requests
 
 
@@ -28,7 +29,11 @@ class SearchView(View):
         if not len(str(searched).strip()) == 0:
             found = Book.objects.annotate(search=SearchVector("title", "author", "isbn")).filter(
                 search=searched)
-            return render(request, 'mylib/search_results.html', {'searched': searched, 'found': found, 'books':book})
+            found_profiles = Profile.objects.annotate(
+                search=SearchVector("user__username", "user__first_name", "user__last_name")).filter(
+                search=searched)
+            return render(request, 'mylib/search_results.html',
+                          {'searched': searched, 'found': found, 'books': book, 'profiles': found_profiles})
         else:
             messages.error(request, 'Search bar is empty, please type to search.')
             return redirect('search')

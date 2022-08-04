@@ -1,10 +1,8 @@
 import datetime
-import requests
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Count
-from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .models import Library, Book, Borrowed
@@ -39,18 +37,23 @@ class BookDetailView(LoginRequiredMixin, View):
 
 
 class LibrarianDashboardView(LibrarianPermissionRequiredMixin, View):
-
     def get(self, request):
-        paginator = Paginator(Book.objects.all(), 12)
-        first_page = paginator.page(1).object_list
-        page_range = paginator.page_range
         pk = request.user.library.id
         library = Library.objects.get(pk=pk)
         borrowed_books = Borrowed.objects.filter(book__location=library)
         not_returned = borrowed_books.filter(returned=None)
+
+        frequent = borrowed_books.values('book__title').annotate(
+            count_borrow=Count('book'),
+        ).order_by('-count_borrow')[:5]
+
+        if borrow_count := frequent[0].get('count_borrow', None) if frequent else None:
+            frequent = frequent.annotate(percentage=Count('book') * 100 / borrow_count)
+
         books = Book.objects.filter(location=pk)
-        frequent = Borrowed.objects.values_list('book__title').annotate(f=Count('book')).order_by('-f')[:5]
-        print(frequent)
+        paginator = Paginator(books, 12)
+        first_page = paginator.page(1).object_list
+        page_range = paginator.page_range
         form = BookForm()
         return render(request, 'library/dashboard.html',
                       {'library': library, 'books': books, 'form': form, 'borrowed_books': borrowed_books,
@@ -58,7 +61,9 @@ class LibrarianDashboardView(LibrarianPermissionRequiredMixin, View):
                        'page_range': page_range, 'frequent': frequent})
 
     def post(self, request):
-        paginator = Paginator(Book.objects.all(), 12)
+        pk = request.user.library.id
+        books = Book.objects.filter(location=pk)
+        paginator = Paginator(books, 12)
         page_n = request.POST.get('page_n', None)
         results = list(paginator.page(page_n).object_list)
         return render(request, 'library/book_display.html', {'results': results})
@@ -83,10 +88,6 @@ class DeleteBookView(LibrarianPermissionRequiredMixin, View):
             book.delete()
             return redirect('dashboard')
         return redirect('book_detail')
-
-    def get(self, request, pk):
-        book = get_object_or_404(Book, pk=pk)
-        return render(request, 'library/delete_book.html', {'book': book})
 
 
 class EditBookView(LibrarianPermissionRequiredMixin, View):
@@ -155,3 +156,5 @@ class AddBookFromGoogleView(LibrarianPermissionRequiredMixin, View):
                         info=book['volumeInfo'].get('description', None), location=request.user.library)
         new_book.save()
         return redirect('dashboard')
+
+

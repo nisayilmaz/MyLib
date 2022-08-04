@@ -1,5 +1,6 @@
 {% extends "mylib/base.html" %}
 {% block title %}
+{% load static %}
 <title>Mylib•Libraries</title>
 {% endblock %}
 {% block content %}
@@ -15,7 +16,39 @@
     </div>
     {% endfor %}
     <div class="section-title">
-        <h2>Search results for "{{ searched }}"</h2>
+        <h2>Search results for "{{ searched }}" in users</h2>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for profile in profiles %}
+            <div class="col-md-2 col-sm-6">
+                <div class="product-grid">
+                    <div class="product-image">
+                        {% if profile.user.avatar %}
+                        <a href="#" class="image">
+                            <img style="height:150px; width: 150px; border-radius:50%;" class="img-1" src="{{profile.user.avatar.url}}">
+                        </a>
+                        {% else %}
+                        <a href="#" class="image">
+                            <img style="height:150px; width: 150px; border-radius:50%;" class="img-1" src="{% static 'img/profile.jpg' %}">
+                        </a>
+                        {% endif %}
+                        <ul class="product-links">
+                            <li><a href="{%url 'profile' profile.user.id %}">More</a></li>
+                        </ul>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="title"><a href="#">{{ profile.user.username }}</a></h3>
+                        <p>{{ profile.user.first_name }} {{ profile.user.last_name }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section-title">
+        <h2>Search results for "{{ searched }}" in libraries</h2>
     </div>
     <div class="container">
         <div class="row">
@@ -39,7 +72,7 @@
             {% endfor %}
         </div>
     </div>
-
+    {% if user.groups.all.0.name == "Librarian" %}
     <div class="section-title">
         <h2>Search results for "{{ searched }}" in Google</h2>
     </div>
@@ -56,7 +89,7 @@
                         <ul class="product-links">
                             <form method="POST" action="{% url 'add' forloop.counter %}">
                                 {% csrf_token %}
-                                <input type="submit" value="Add Book" >
+                                <input type="submit" value="Add Book">
                             </form>
                         </ul>
                         {% endif %}
@@ -70,6 +103,7 @@
             {% endfor %}
         </div>
     </div>
+    {% endif %}
 </main>
 <!-- End #main -->
 {% endblock %}

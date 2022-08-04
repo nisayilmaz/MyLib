@@ -50,7 +50,7 @@
         <nav id="navbar" class="navbar">
             <ul>
                 {% if user.is_authenticated %}
-                <li style="color:white;">Welcome {{request.user.username }}!</li>
+                <li style="color:white; display: flex;"><a href="{% url 'profile' request.user.id %}"><i style="font-size:15px; flex: 1; margin-right: 5px" class="bx bx-user"></i></a>Welcome {{request.user.username }}!</li>
                 {% endif %}
                 <li><a href="{% url 'homepage' %}">Home</a></li>
                 <li><a href="blog.html">Blog</a></li>

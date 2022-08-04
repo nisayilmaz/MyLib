@@ -1,0 +1,278 @@
+{% extends 'mylib/base.html' %}
+{% block content %}
+{%load static%}
+{% load crispy_forms_tags %}
+<link href="{% static 'css/profile.css'%}" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<main id="main">
+    <div data-alerts="alerts" data-titles="{'warning': '<em>Warning!</em>'}" data-ids="myid"></div>
+    <div style="margin-top: 120px" class="container emp-profile" data-aos="fade-up">
+        <div class="row">
+            <div class="col-md-4">
+                <div style="padding-bottom: 20px" class="profile-img">
+                    {% if profile.user.avatar %}
+                    <img src="{{profile.user.avatar.url}}">
+                    {% else %}
+                    <img src="{% static 'img/profile.jpg' %}">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h5>
+                        {{profile.user.username}}
+                    </h5>
+                    <h6>
+                        {{profile.user.first_name}} {{profile.user.last_name}}
+                    </h6>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#books" role="tab"
+                               aria-controls="home" aria-selected="true">Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#friends" role="tab"
+                               aria-controls="profile" aria-selected="false">Friends</a>
+
+                        </li>
+                        {%if profile.user == request.user%}
+                        <li class="nav-item">
+                            <a class="nav-link" id="requests-tab" data-toggle="tab" href="#friend-requests" role="tab"
+                               aria-controls="profile" aria-selected="false">Friend Requests</a>
+
+                        </li>
+                        {%endif%}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                {% if request.user == profile.user %}
+                <button type="button" class="profile-edit-btn" data-toggle="modal" data-target="#editProfileModal"> Edit
+                    Profile
+                </button>
+                {% else %}
+                {% if not friends_with %}
+                <button type="submit" value="{{profile.user.id}}" class="profile-edit-btn"> Add Friend
+                </button>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-work ">
+                    <h6>About {{profile.user.first_name}}</h6>
+                    {% if profile.bio %}
+                    <p>{{ profile.bio }}</p>
+                    {% else %}
+                    <p>This user doesn't have a bio</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade show active" id="books" style="overflow-y:auto; max-height: 400px" role="tabpanel"
+                         aria-labelledby="books-tab">
+                        {% for borrowed in books %}
+                        <div class="friend_request container">
+                            <div class="row" style="padding:3px">
+                                <div class="col-md-2">
+                                    {% if borrowed.book.image %}
+                                    <img class="book-photo" src="{{borrowed.book.image.url}}"
+                                         alt="Avatar">
+                                    {% else %}
+                                    <img class="book-photo" src="/static/img/bos.png"
+                                         alt="Avatar">
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="request-label">{{borrowed.book.title}}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="request-label">{{borrowed.book.author}}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <a type="submit" class="grey-button a"
+                                       href="{% url 'book_detail' borrowed.book.id %}"> view book </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="tab-pane fade" id="friends" style="overflow-y:auto; max-height: 400px" role="tabpanel"
+                         aria-labelledby="friends-tab">
+                        {% for friend in friends %}
+                        <div class="friend_request container">
+                            <div class="row" style="padding:3px">
+                                <div class="col-md-1">
+                                    {% if friend.avatar %}
+                                    <img class="friend-photo" src="{{friend.avatar.url}}"
+                                         alt="Avatar">
+                                    {% else %}
+                                    <img class="friend-photo" src="{%static 'img/profile.jpg'%}" alt="Avatar">
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-5">
+                                    <p class="request-label">{{friend.username}}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="blue-button" value="{{friend.id}}"> chat
+                                    </button>
+                                </div>
+                                <div class="col-md-3">
+                                    <a type="submit" class="grey-button a"
+                                       href="{%url 'profile' friend.id %}"> view </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="tab-pane fade" id="friend-requests" style="overflow-y:auto; max-height: 400px;"
+                         role="tabpanel" aria-labelledby="friends-tab">
+
+                        {% for friend_request in friend_requests %}
+                        <div class="friend_request container" id="{{friend_request.id}}">
+                            <div class="row" style="padding:3px">
+                                <div class="col-md-1">
+                                    {% if friend_request.from_user.avatar %}
+                                    <img class="friend-photo" src="{{friend_request.from_user.avatar.url}}"
+                                         alt="Avatar">
+                                    {% else %}
+                                    <img class="friend-photo" src="{%static 'img/profile.jpg'%}" alt="Avatar">
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-5">
+                                    <p class="request-label">{{friend_request.from_user.username}}</p>
+                                </div>
+                                <div id="accept_{{friend_request.id}}" class="col-md-2">
+                                    <button type="submit" class="blue-button accept" value="{{friend_request.id}}"> add
+                                        friend
+                                    </button>
+                                </div>
+                                <div id="view_{{friend_request.id}}" class="col-md-2">
+                                    <a type="submit" class="grey-button a"
+                                       href="{%url 'profile' friend_request.from_user.id %}"> view </a>
+                                </div>
+                                <div id="delete_{{friend_request.id}}" class="col-md-2">
+                                    <button type="submit" class="grey-button delete" value="{{friend_request.id}}">
+                                        delete
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit your profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype='multipart/form-data' action="{% url 'edit_profile' %}">
+                        {% csrf_token %}
+                        {{ form.username|as_crispy_field }}
+                        {{ form.bio|as_crispy_field }}
+                        {{ form.avatar|as_crispy_field }}
+                        <div class="modal-footer">
+                            <button type="submit" name="confirm" class="btn btn-primary">Save Changes</button>
+                            <button type="submit" name="discard" class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    $('.accept').click(function (event) {
+        event.preventDefault();
+        let frid = $(this).attr('value');
+        // ajax
+        $.ajax({
+            type: "POST",
+            url: "{% url 'add_friend_accept' %}", // name of url
+            data: {
+                'pk': frid,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function () {
+                console.log("success")
+                $(`#accept_${frid}`).empty().removeClass("col-md-2").addClass("col-md-5")
+                $(`#view_${frid}`).remove()
+                $(`#delete_${frid}`).remove()
+                $(`#accept_${frid}`).append("<p class='message'>Friend request accepted!</p>")
+
+            },
+            error: function (res) {
+                console.log(res)
+            }
+        }); //
+
+    });
+
+    $('.delete').click(function (event) {
+        event.preventDefault();
+        let frid = $(this).attr('value');
+        // ajax
+        $.ajax({
+            type: "POST",
+            url: "{% url 'reject_friend_request' %}",
+            data: {
+                'pk': frid,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function () {
+                console.log("success")
+                $(`#accept_${frid}`).empty().removeClass("col-md-2").addClass("col-md-5")
+                $(`#view_${frid}`).remove()
+                $(`#delete_${frid}`).remove()
+                $(`#accept_${frid}`).append("<p class='message'>Friend request deleted!</p>")
+
+            },
+            error: function (res) {
+                console.log(res)
+            }
+        });
+
+    });
+
+    $('.profile-edit-btn').click(function (event) {
+        event.preventDefault();
+        let user_id = $(this).attr('value');
+        // ajax
+        $.ajax({
+            type: "POST",
+            url: "{% url 'add_friend' %}",
+            data: {
+                'to_id': user_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (res) {
+                $('.profile-edit-btn').addClass('profile-edit-btn-clicked');
+
+            },
+            error: function () {
+                console.log("error")
+            }
+        });
+
+    });
+</script>
+{% endblock %}

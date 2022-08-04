@@ -2,23 +2,25 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import EmailMessage
 from .mixins import UnauthenticatedRequiredMixin
-from .forms import CreateUserForm, CreateLibraryForm, LoginForm, ResetPasswordForm
+from .forms import CreateUserForm, CreateLibraryForm, LoginForm, ResetPasswordForm, EditProfileForm
 from django.views import View
 from django.contrib.sites.shortcuts import get_current_site
 from .token import account_activation_token
-from .models import User
+from .models import User, Profile, FriendRequest
 from django.contrib.auth.forms import SetPasswordForm
+from library.models import Borrowed
 
 
 class RegisterView(UnauthenticatedRequiredMixin, View):
     def post(self, request):
-        form = CreateUserForm(request.POST)
+        form = CreateUserForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
@@ -114,6 +116,8 @@ class ActivateView(View):
         if user is not None and account_activation_token.check_token(user, token):
             user.is_active = True
             user.save()
+            profile = Profile(user=user)
+            profile.save()
             messages.success(request, 'Your account is activated!')
             return redirect('login')
         else:
@@ -168,3 +172,71 @@ class ResetPasswordView(View):
         user = User.objects.get(pk=uid)
         form = SetPasswordForm(user)
         return render(request, 'accounts/reset_password.html', {'form': form})
+
+
+class ProfileView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        user = User.objects.get(pk=pk)
+        profile = get_object_or_404(Profile, user=user)
+        books = Borrowed.objects.filter(borrowed_by=user).distinct('book')
+        friend_requests = FriendRequest.objects.filter(to_user=user)
+        friends = user.friends.all()
+        friends_with = False
+        form = EditProfileForm(instance=user)
+        if request.user != user:
+            friends_with = user.friends.filter(pk=request.user.id).exists()
+        return render(request, 'accounts/profile.html',
+                      {'profile': profile, 'books': books, 'friend_requests': friend_requests, 'friends': friends,
+                       'friends_with': friends_with, 'form': form})
+
+
+class SendFriendRequest(LoginRequiredMixin, View):
+    def post(self, request):
+        pk = request.POST.get('to_id')
+        to_user = get_object_or_404(User, pk=pk)
+        if request.user != to_user:
+            try:
+                req = FriendRequest.objects.get(to_user=to_user, from_user=request.user)
+                return JsonResponse({'status': 'Already sent!'})
+            except FriendRequest.DoesNotExist:
+                req = FriendRequest(to_user=to_user, from_user=request.user)
+                req.save()
+        return JsonResponse({'status': 'Friend request sent!'})
+
+
+class AcceptFriendRequest(LoginRequiredMixin, View):
+    def post(self, request):
+        pk = request.POST.get('pk')
+        req = FriendRequest.objects.get(pk=pk)
+        if req.to_user == request.user:
+            req.to_user.friends.add(req.from_user)
+            req.from_user.friends.add(req.to_user)
+            req.delete()
+        return JsonResponse({'status': 'Friend added!'})
+
+
+class RejectFriendRequest(LoginRequiredMixin, View):
+    def post(self, request):
+        pk = request.POST.get('pk')
+        req = FriendRequest.objects.get(pk=pk)
+        if req.to_user == request.user:
+            req.delete()
+        return JsonResponse({'status': 'Friend request rejected!'})
+
+
+class EditProfileView(LoginRequiredMixin, View):
+    def post(self, request):
+        user = request.user
+        profile = Profile.objects.get(user=user)
+        form = EditProfileForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            if 'confirm' in request.POST:
+                profile.bio = form.cleaned_data['bio']
+                if form.cleaned_data['bio'] != "" and form.cleaned_data['bio'] is not None:
+                    profile.save()
+                form.fields.pop('bio')
+                user.save()
+            return redirect('profile', pk=user.id)
+        else:
+            messages.error(request, 'Unable to edit profile.')
+            return redirect('profile', pk=user.id)
