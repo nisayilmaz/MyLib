@@ -24,7 +24,8 @@ urlpatterns = [
     path('', HomepageView.as_view(), name='homepage'),
     path('libraries/', include('library.urls')),
     path('account/', include('accounts.urls')),
-    path('search/', SearchView.as_view(), name='search')
+    path('search/', SearchView.as_view(), name='search'),
+    path('study_group/', include('study_group.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

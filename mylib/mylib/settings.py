@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'accounts',
     'mylib',
     'library',
+    'study_group',
+    'channels'
 
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -77,6 +79,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'mylib.wsgi.application'
+ASGI_APPLICATION = "mylib.asgi.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases

@@ -6,6 +6,7 @@ class User(AbstractUser):
     library = models.ForeignKey('library.Library', on_delete=models.CASCADE, blank=True, null=True)
     friends = models.ManyToManyField("User", blank=True)
     avatar = models.ImageField(default=None, null=True, blank=True, upload_to='profile_images')
+    last_seen = models.DateTimeField(auto_now_add= True, null=True, blank=True)
 
 
 class Profile(models.Model):

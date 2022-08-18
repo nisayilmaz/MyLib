@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -88,6 +90,8 @@ class LoginView(UnauthenticatedRequiredMixin, View):
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
                     login(request, user)
+                    user.last_seen = None
+                    user.save()
                     return redirect('homepage')
                 else:
                     messages.error(request, 'Username or password not correct')
@@ -102,6 +106,9 @@ class LoginView(UnauthenticatedRequiredMixin, View):
 
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
+        user = request.user
+        user.last_seen = datetime.datetime.now()
+        user.save()
         logout(request)
         return redirect('homepage')
 

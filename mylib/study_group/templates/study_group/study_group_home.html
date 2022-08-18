@@ -1,0 +1,189 @@
+{% extends 'mylib/base.html' %}
+{% block content %}
+{% load static %}
+<main id="main">
+    <div style="margin-top: 120px" class="container emp-profile" data-aos="fade-up">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="profile-head">
+                    <h5>
+                        {{room.name}}
+                    </h5>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#info" role="tab"
+                               aria-controls="home" aria-selected="true">Info</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#chat" role="tab"
+                               aria-controls="profile" aria-selected="false">Chat</a>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade show active" id="books"
+                         role="tabpanel"
+                         aria-labelledby="books-tab">
+
+                    </div>
+                    <div class="tab-pane fade" id="chat" role="tabpanel"
+                         aria-labelledby="chat-tab">
+                        <div class="container">
+                            <div class="row clearfix">
+                                <div class="col-lg-12">
+                                    <div class="card chat-app">
+                                        <div id="plist" class="people-list">
+                                            <div class="input-group">
+                                                <p> People in this study group </p>
+                                            </div>
+                                            <ul class="list-unstyled chat-list mt-2 mb-0">
+                                                {% for user in room.users.all %}
+                                                <li class="clearfix">
+                                                    {% if user.avatar %}
+                                                    <img src="{{user.avatar.url}}" alt="avatar">
+                                                    {% else %}
+                                                    <img src="{% static 'img/profile.jpg'%}">
+                                                    {% endif %}
+                                                    <div class="about">
+                                                        <div class="name">{{user.username}}</div>
+                                                        {% if user.last_seen %}
+                                                        <div class="status">Last seen {{user.last_seen}}</div>
+                                                        {% else %}
+                                                        <div class="status"> online</div>
+                                                        {% endif %}
+                                                    </div>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        <div class="chat" style="min-height: 600px">
+                                            <div style="min-height: 500px;" class="chat-history">
+                                                <ul class="m-b-0"
+                                                    style="max-height: 600px; overflow-y: scroll; overflow-x: clip;"
+                                                    id="chat-log">
+                                                    {% for m in messages %}
+                                                    {% if request.user.username == m.username%}
+                                                    <li class="clearfix">
+                                                        <div class="message-data text-right">
+                                                            <p> {{m.username}} </p>
+                                                        </div>
+                                                        <div class="message other-message float-right"> {{m.content}}
+                                                        </div>
+                                                    </li>
+                                                    {% else %}
+                                                    <li class="clearfix">
+                                                        <div class="message-data">
+                                                            <p> {{m.username}} </p>
+                                                        </div>
+                                                        <div class="message my-message">{{m.content}}</div>
+                                                    </li>
+                                                    {% endif %}
+
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                            <div class="chat-message clearfix">
+                                                <div class="input-group mb-0">
+                                                    <input id="chat-message-input" type="text" class="form-control"
+                                                           placeholder="Enter text here..." size="100"><br>
+                                                    <input class="chat-button" id="chat-message-submit" type="button"
+                                                           value="Send">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="info" style="overflow-y:auto; max-height: 400px;"
+                         role="tabpanel" aria-labelledby="friends-tab">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="{% static 'css/chat.css'%}" rel="stylesheet"/>
+
+    {{ room.title|json_script:"room-name" }}
+    {{ request.user.username|json_script:"username"}}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const userName = JSON.parse(document.getElementById('username').textContent);
+
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            var $newdiv1 = $("  <li class=\"clearfix\">\n" +
+                "                            <div class=\"message-data\">\n" +
+                "                                <p> " + [data.username] + "</p>\n" +
+                "                            </div>\n" +
+                "                            <div class=\"message my-message\"> " + [data.message] + "</div>\n" +
+                "                        </li>");
+
+            var $newdiv2 = $("<li class=\"clearfix\">\n" +
+                "                            <div class=\"message-data text-right\">\n" +
+                "                                <p> " + [data.username] + "</p>\n" +
+                "                            </div>\n" +
+                "                            <div class=\"message other-message float-right\">" + [data.message] + " </div>\n" +
+                "                        </li> ")
+            if (userName === data.username) {
+                $('#chat-log').append($newdiv2);
+            } else {
+                $('#chat-log').append($newdiv1);
+            }
+            scrollToBottom();
+
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
+            if (e.keyCode === 13) {
+                $("#chat-message-submit").click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function (e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            if (message !== "") {
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'username': userName,
+                    'room': roomName
+                }));
+                messageInputDom.value = '';
+            }
+
+        };
+
+        function scrollToBottom() {
+            let objDiv = document.getElementById("chat-log");
+            objDiv.scrollTop = objDiv.scrollHeight;
+        }
+
+        scrollToBottom();
+    </script>
+</main>
+{% endblock %}

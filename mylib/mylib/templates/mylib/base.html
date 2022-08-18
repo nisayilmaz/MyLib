@@ -53,15 +53,14 @@
                 <li style="color:white; display: flex;"><a href="{% url 'profile' request.user.id %}"><i style="font-size:15px; flex: 1; margin-right: 5px" class="bx bx-user"></i></a>Welcome {{request.user.username }}!</li>
                 {% endif %}
                 <li><a href="{% url 'homepage' %}">Home</a></li>
-                <li><a href="blog.html">Blog</a></li>
                 {% if user.groups.all.0.name == "Librarian" %}
                 <li><a href="{% url  'dashboard' %}">My Library</a></li>
                 {% endif %}
                 {% if not user.is_authenticated %}
-                <li><a href="about.html">About</a></li>
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'register' %}">Join</a></li>
                 {% else %}
+                <li><a href="{% url 'study_groups' %}">Study Groups</a></li>
                 <li><a href="{% url 'libraries_home' %}">Libraries</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
                 <li>

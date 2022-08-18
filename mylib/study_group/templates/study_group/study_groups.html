@@ -1,0 +1,48 @@
+{% extends "mylib/base.html" %}
+{% block title %}
+<title>Mylib•Study Groups</title>
+{% endblock %}
+{% block content %}
+<main id="main">
+    <!-- ======= Our Portfolio Section ======= -->
+    <section class="breadcrumbs">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>Study Groups</h2>
+                <ol>
+                    <li><a href="{% url 'homepage' %}">Home</a></li>
+                    <li>Study Groups</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+    <!-- End Our Portfolio Section -->
+    <!-- ======= Portfolio Section ======= -->
+    <section class="portfolio">
+        <div class="container">
+            <div class="row portfolio-container" data-aos="fade-up" data-aos-easing="ease-in-out"
+                 data-aos-duration="500">
+                {% for group in study_groups %}
+                <div class="col-lg-6 col-md-6 portfolio-wrap filter-web">
+                    <div class="portfolio-item">
+                        <img src="{{group.avatar.url}}" class="img-fluid" alt="" style=" height:400px;">
+                        <div class="portfolio-info">
+                            <h3>{{group.title}}</h3>
+                            <p style="color: white">{{group.subject}}</p>
+                            <div>
+                                <form method="POST" action="{% url 'join' group.id %}">
+                                    {% csrf_token %}
+                                    <button style="background-color: inherit;border: none;color: white" title="Library Details">Join Group</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- End Portfolio Section -->
+</main>
+<!-- End #main -->
+{% endblock %}
