@@ -1,0 +1,2 @@
+# MyLib
+MyLib is a website in which you can view books from many different libraries registered by the librarians. You can register as a user, or a librarian if you are working in a library. Librarians can add books manualloy or from Google Book API as well as editing or deleting these books. Any type of user can view these books in detail, borrow and return the books. You can add other users as friends and join study groups with chats.
